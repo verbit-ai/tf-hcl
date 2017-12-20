@@ -1,3 +1,4 @@
+require 'bigdecimal'
 require 'rltk'
 require 'rltk/ast'
 require 'tf/hcl/version'

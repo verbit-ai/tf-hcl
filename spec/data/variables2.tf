@@ -18,6 +18,9 @@ resource "aws_instance" "web" {
 locals {
   default_name_prefix = "${var.project_name}-web"
   name_prefix         = "${var.name_prefix != "" ? var.name_prefix : local.default_name_prefix}"
+  octal_test = 04453
+  hex_test = 0xAABBCC
+  scientific_test = 9.8e10
 }
 
 provider "aws" {

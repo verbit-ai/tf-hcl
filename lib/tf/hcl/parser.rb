@@ -47,13 +47,16 @@ module Tf
       end
 
       production(:value) do
-        clause('BOOLEAN') { |e0| Tf::Hcl::Boolean.new(e0) }
-        clause('INTEGER') { |e0| Tf::Hcl::Integer.new(e0) }
-        clause('FLOAT') { |e0| Tf::Hcl::Integer.new(e0) }
-        clause('STRING') { |e0| Tf::Hcl::String.new(e0) }
-        clause('MULTILINE_STRING') { |e0| Tf::Hcl::MultiLineString.new(*e0) }
-        clause('list') { |e0| Tf::Hcl::List.new(e0) }
-        clause('object') { |e0| Tf::Hcl::Object.new(e0) }
+        clause('BOOLEAN') { |i| Tf::Hcl::Boolean.new(i) }
+        clause('INTEGER') { |i| Tf::Hcl::Integer.new(i) }
+        clause('FLOAT') { |i| Tf::Hcl::Float.new(i) }
+        clause('HEXADECIMAL') {|i| Tf::Hcl::Hexadecimal.new(i)}
+        clause('OCTAL') {|i| Tf::Hcl::Octal.new(i)}
+        clause('SCIENTIFIC_NOTATION') {|i| Tf::Hcl::BigDecimal.new(i)}
+        clause('STRING') { |i| Tf::Hcl::String.new(i) }
+        clause('MULTILINE_STRING') { |i| Tf::Hcl::MultiLineString.new(*i) }
+        clause('list') { |i| Tf::Hcl::List.new(i) }
+        clause('object') { |i| Tf::Hcl::Object.new(i) }
       end
 
       production(:attribute) do

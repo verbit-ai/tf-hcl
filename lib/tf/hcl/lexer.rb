@@ -29,14 +29,14 @@ module Tf
       rule(/"/, :string) { |t| pop_state; [:STRING, reset] }
       # Floats
       rule(/\d*?\.\d+/) { |t| [:FLOAT, t.to_f] }
+      # Octal
+      rule(/0\d+/) { |t| [:OCTAL, t.to_i(8)] }
       # Integers
-      rule(/\d+/) { |t| [:INTEGER, t.to_i] }
+      rule(/[1-9]\d*/) { |t| [:INTEGER, t.to_i] }
       # Hexadecimal
       rule(/0x[A-Fa-f\d]+/) {|t| [:HEXADECIMAL, t.to_i(16)]}
-      # Octal
-      rule(/0\d+/) { [:OCTAL, t.to_i(8)] }
       # Scientific Notation
-      rule(/\d*?\.?\d+[eE]\d+/) { |t| [:BIG_DECIMAL, BigDecimal.new(t)] }
+      rule(/\d*?\.?\d+[eE]\d+/) { |t| [:SCIENTIFIC_NOTATION, ::BigDecimal.new(t)] }
       # Identifiers
       rule(/[A-Za-z][A-Za-z0-9\-\_.]*/) { |t| [:IDENT, t] }
       # Single line comments

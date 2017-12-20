@@ -58,7 +58,6 @@ module Tf
       end
     end
 
-
     class MultiLineString < Value
       value :value, ::String
       value :identifier, ::String
@@ -74,6 +73,26 @@ module Tf
 
     class Float < Value
       value :value, ::Float
+    end
+
+    class Hexadecimal < Integer
+      def to_hcl(level = 0)
+        '0x%X' % value
+      end
+    end
+
+    class Octal < Integer
+      def to_hcl(level = 0)
+        '0%o' % value
+      end
+    end
+
+    class BigDecimal < Value
+      value :value, ::BigDecimal
+
+      def to_hcl(level = 0)
+        value.to_s
+      end
     end
 
     class String < Value
