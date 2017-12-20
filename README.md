@@ -20,8 +20,13 @@ Or install it yourself as:
 
 ## Usage
 
+`bin/console`
+
+```ruby
 ast = Tf::Hcl.load_file("spec/data/variables2.tf")
 puts Tf::Hcl.dump(ast)
+```
+
 
 ## Development
 
