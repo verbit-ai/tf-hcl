@@ -8,7 +8,7 @@ RSpec.describe Tf::Hcl do
       it 'can be loaded' do
         expect{Tf::Hcl.load_file(file)}.to_not raise_exception
       end
-      
+
       it 'can be dumped' do
         expect{Tf::Hcl.dump(Tf::Hcl.load_file(file))}.to_not raise_exception
       end

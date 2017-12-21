@@ -153,92 +153,95 @@ module Tf
       end
     end
 
-    class Variable < BaseNode
-      value :name, ::String
+    class SectionNode < BaseNode
       child :attributes, [Attribute]
       child :comments, [Comment]
 
+      def find_by_key(k)
+        attributes.find { |a| a.key.value == k }
+      end
+
+      def comments_hcl
+        "#{comments.map(&:to_hcl).join("\n")}\n"
+      end
+
+      def attributes_hcl
+        "{\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+      end
+    end
+
+    class Variable < SectionNode
+      value :name, ::String
+
       def type
-        attributes.find { |a| a.key.value == 'type' }
+        find_by_key('type')
       end
 
       def default
-        attributes.find { |a| a.key.value == 'default' }
+        find_by_key('default')
+      end
+
+      def description
+        find_by_key('description')
       end
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nvariable \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}variable \"#{name}\" #{attributes_hcl}"
       end
     end
 
-    class Module < BaseNode
+    class Module < SectionNode
       value :name, ::String
-      child :attributes, [Attribute]
-      child :comments, [Comment]
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nmodule \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}module \"#{name}\" #{attributes_hcl}"
       end
     end
 
-    class Resource < BaseNode
+    class Resource < SectionNode
       value :type, ::String
       value :name, ::String
-      child :attributes, [Attribute]
-      child :comments, [Comment]
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nresource \"#{type}\" \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}resource \"#{type}\" \"#{name}\" #{attributes_hcl}"
       end
     end
 
-    class Data < BaseNode
+    class Data < SectionNode
       value :type, ::String
       value :name, ::String
-      child :attributes, [Attribute]
-      child :comments, [Comment]
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\ndata \"#{type}\" \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}data \"#{type}\" \"#{name}\" #{attributes_hcl}"
       end
     end
 
 
-    class Locals < BaseNode
-      child :attributes, [Attribute]
-      child :comments, [Comment]
-
+    class Locals < SectionNode
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nlocals {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}locals #{attributes_hcl}"
       end
     end
 
-    class Terraform < BaseNode
-      child :attributes, [Attribute]
-      child :comments, [Comment]
-
+    class Terraform < SectionNode
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nterraform {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}terraform #{attributes_hcl}"
       end
     end
 
-    class Provider < BaseNode
+    class Provider < SectionNode
       value :name, ::String
-      child :attributes, [Attribute]
-      child :comments, [Comment]
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\nprovider \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}provider \"#{name}\" #{attributes_hcl}"
       end
     end
 
-    class Output < BaseNode
+    class Output < SectionNode
       value :name, ::String
-      child :attributes, [Attribute]
-      child :comments, [Comment]
 
       def to_hcl
-        "#{comments.map(&:to_hcl).join("\n")}\noutput \"#{name}\" {\n#{attributes.map { |a| a.to_hcl(1) }.join("\n")}\n}"
+        "#{comments_hcl}output \"#{name}\" #{attributes_hcl}"
       end
     end
   end

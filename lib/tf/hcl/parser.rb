@@ -5,47 +5,39 @@ module Tf
       list(:sections, 'csection')
 
       production(:comment) {
-        clause('COMMENT') { |e0| Tf::Hcl::Comment.new(e0) }
-        clause('MULTILINE_COMMENT') { |e0| Tf::Hcl::MultiLineComment.new(e0) }
+        clause('COMMENT') { |c| Tf::Hcl::Comment.new(c) }
+        clause('MULTILINE_COMMENT') { |c| Tf::Hcl::MultiLineComment.new(c) }
       }
 
       list(:comments, 'comment')
 
       production(:section) do
-        #clause('comments VARIABLE STRING object') { |e0, _, e1, e2| Tf::Hcl::Variable.new(e1, e2, e0) }
-        clause('VARIABLE STRING object') { |_, e1, e2| Tf::Hcl::Variable.new(e1, e2) }
-        #clause('comments OUTPUT STRING object') { |e0, _, e1, e2| Tf::Hcl::Output.new(e1, e2, e0) }
-        clause('OUTPUT STRING object') { |_, e1, e2| Tf::Hcl::Output.new(e1, e2, []) }
-        #clause('comments PROVIDER STRING object') { |e0, _, e1, e2| Tf::Hcl::Provider.new(e1, e2, e0) }
-        clause('PROVIDER STRING object') { |_, e1, e2| Tf::Hcl::Provider.new(e1, e2) }
-        #clause('comments MODULE STRING object') { |e0, _, e1, e2| Tf::Hcl::Module.new(e1, e2, e0) }
-        clause('MODULE STRING object') { |_, e1, e2| Tf::Hcl::Module.new(e1, e2, []) }
+        clause('VARIABLE STRING object') { |_, name, obj| Tf::Hcl::Variable.new(name, obj) }
+        clause('OUTPUT STRING object') { |_, name, obj| Tf::Hcl::Output.new(name, obj) }
+        clause('PROVIDER STRING object') { |_, name, obj| Tf::Hcl::Provider.new(name, obj) }
+        clause('MODULE STRING object') { |_, name, obj| Tf::Hcl::Module.new(name, obj) }
 
-        #clause('comments DATA STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3, e0) }
-        clause('DATA STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3) }
-        #clause('comments RESOURCE STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3, e0) }
-        clause('RESOURCE STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3) }
+        clause('DATA STRING STRING object') { |_, name, type, obj| Tf::Hcl::Data.new(name, type, obj) }
+        clause('RESOURCE STRING STRING object') { |_, name, type, obj| Tf::Hcl::Resource.new(name, type, obj) }
 
-        #clause('comments LOCALS object') { |e0, _, e1| Tf::Hcl::Locals.new(e1, e0) }
-        clause('LOCALS object') { |_, e1| Tf::Hcl::Locals.new(e1) }
-        #clause('comments TERRAFORM object') { |e0, _, e1| Tf::Hcl::Terraform.new(e1, e0) }
-        clause('TERRAFORM object') { |_, e1| Tf::Hcl::Terraform.new(e1) }
+        clause('LOCALS object') { |_, obj| Tf::Hcl::Locals.new(obj) }
+        clause('TERRAFORM object') { |_, obj| Tf::Hcl::Terraform.new(obj) }
       end
 
       production(:csection, 'comments section') { |c, s| s.comments = c; s }
 
       production(:object) do
-        clause('LBRACE attributes RBRACE') { |_, e0, _| e0 }
+        clause('LBRACE attributes RBRACE') { |_, attrs, _| attrs }
       end
 
       production(:list) do
-        clause('LBRACKET list_values RBRACKET') { |_, e0, _| e0 }
+        clause('LBRACKET list_values RBRACKET') { |_, vals, _| vals }
       end
 
       production(:list_values) do
         clause('') { [] }
-        clause('value') { |e0| [e0] }
-        clause('value COMMA list_values') { |e0, _, e1| [e0] + e1 }
+        clause('value') { |v| [v] }
+        clause('value COMMA list_values') { |val, _, vals| [val] + vals }
       end
 
       production(:value) do
