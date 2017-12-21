@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'benchmark'
 require 'rltk'
 require 'rltk/ast'
 require 'tf/hcl/version'

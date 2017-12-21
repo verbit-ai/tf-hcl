@@ -1,10 +1,36 @@
-variable "interpolated_string_var" {
-  default = "x"
-}
-module "simple_module" {
-  count = 1
+variable "alb_is_internal" {
+  description = "Boolean determining if the ALB is internal or externally facing."
+  default     = false
 }
 
+variable "alb_name" {
+  description = "The name of the ALB as will show in the AWS EC2 ELB console."
+}
+
+variable "alb_protocols" {
+  description = "The protocols the ALB accepts. e.g.: [\"HTTP\"]"
+  type        = "list"
+  default     = ["HTTP"]
+}
+
+variable "alb_security_groups" {
+  description = "The security groups with which we associate the ALB. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+  type        = "list"
+}
+
+variable "region" {
+  description = "AWS region to use."
+}
+
+variable "backend_port" {
+  description = "The port the service on the EC2 instances listen on."
+  default     = 80
+}
+
+# hello there
+/* whats up
+  doolly
+*/
 resource "aws_instance" "web" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"

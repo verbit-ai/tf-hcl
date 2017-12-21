@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Adam Tistler"]
   spec.email         = ["atistler@datapipe.com"]
 
-  spec.summary       = %q{Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{A Terraform HCL parser/dumper written in Ruby}
+  spec.description   = %q{A Terraform HCL parser.  Utilizes the Ruby Langauge Toolkit (RLTK) for lexing, parsing, and AST nodes.  Preserves comments and ordering (important for a config language)}
+  spec.homepage      = "https://datapipe.github.net/Automation/tf-hcl"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

@@ -2,7 +2,7 @@ module Tf
   module Hcl
     class Parser < RLTK::Parser
 
-      list(:sections, 'section')
+      list(:sections, 'csection')
 
       production(:comment) {
         clause('COMMENT') { |e0| Tf::Hcl::Comment.new(e0) }
@@ -12,25 +12,27 @@ module Tf
       list(:comments, 'comment')
 
       production(:section) do
-        clause('comments VARIABLE STRING object') { |e0, _, e1, e2| Tf::Hcl::Variable.new(e1, e2, e0) }
-        clause('VARIABLE STRING object') { |_, e1, e2| Tf::Hcl::Variable.new(e1, e2, []) }
-        clause('comments OUTPUT STRING object') { |e0, _, e1, e2| Tf::Hcl::Output.new(e1, e2, e0) }
+        #clause('comments VARIABLE STRING object') { |e0, _, e1, e2| Tf::Hcl::Variable.new(e1, e2, e0) }
+        clause('VARIABLE STRING object') { |_, e1, e2| Tf::Hcl::Variable.new(e1, e2) }
+        #clause('comments OUTPUT STRING object') { |e0, _, e1, e2| Tf::Hcl::Output.new(e1, e2, e0) }
         clause('OUTPUT STRING object') { |_, e1, e2| Tf::Hcl::Output.new(e1, e2, []) }
-        clause('comments PROVIDER STRING object') { |e0, _, e1, e2| Tf::Hcl::Provider.new(e1, e2, e0) }
-        clause('PROVIDER STRING object') { |_, e1, e2| Tf::Hcl::Provider.new(e1, e2, []) }
-        clause('comments MODULE STRING object') { |e0, _, e1, e2| Tf::Hcl::Module.new(e1, e2, e0) }
+        #clause('comments PROVIDER STRING object') { |e0, _, e1, e2| Tf::Hcl::Provider.new(e1, e2, e0) }
+        clause('PROVIDER STRING object') { |_, e1, e2| Tf::Hcl::Provider.new(e1, e2) }
+        #clause('comments MODULE STRING object') { |e0, _, e1, e2| Tf::Hcl::Module.new(e1, e2, e0) }
         clause('MODULE STRING object') { |_, e1, e2| Tf::Hcl::Module.new(e1, e2, []) }
 
-        clause('comments DATA STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3, e0) }
-        clause('DATA STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3, []) }
-        clause('comments RESOURCE STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3, e0) }
-        clause('RESOURCE STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3, []) }
+        #clause('comments DATA STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3, e0) }
+        clause('DATA STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Data.new(e1, e2, e3) }
+        #clause('comments RESOURCE STRING STRING object') { |e0, _, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3, e0) }
+        clause('RESOURCE STRING STRING object') { |_, e1, e2, e3| Tf::Hcl::Resource.new(e1, e2, e3) }
 
-        clause('comments LOCALS object') { |e0, _, e1| Tf::Hcl::Locals.new(e1, e0) }
-        clause('LOCALS object') { |_, e1| Tf::Hcl::Locals.new(e1, []) }
-        clause('comments TERRAFORM object') { |e0, _, e1| Tf::Hcl::Terraform.new(e1, e0) }
-        clause('TERRAFORM object') { |_, e1| Tf::Hcl::Terraform.new(e1, []) }
+        #clause('comments LOCALS object') { |e0, _, e1| Tf::Hcl::Locals.new(e1, e0) }
+        clause('LOCALS object') { |_, e1| Tf::Hcl::Locals.new(e1) }
+        #clause('comments TERRAFORM object') { |e0, _, e1| Tf::Hcl::Terraform.new(e1, e0) }
+        clause('TERRAFORM object') { |_, e1| Tf::Hcl::Terraform.new(e1) }
       end
+
+      production(:csection, 'comments section') { |c, s| s.comments = c; s }
 
       production(:object) do
         clause('LBRACE attributes RBRACE') { |_, e0, _| e0 }
@@ -50,9 +52,9 @@ module Tf
         clause('BOOLEAN') { |i| Tf::Hcl::Boolean.new(i) }
         clause('INTEGER') { |i| Tf::Hcl::Integer.new(i) }
         clause('FLOAT') { |i| Tf::Hcl::Float.new(i) }
-        clause('HEXADECIMAL') {|i| Tf::Hcl::Hexadecimal.new(i)}
-        clause('OCTAL') {|i| Tf::Hcl::Octal.new(i)}
-        clause('SCIENTIFIC_NOTATION') {|i| Tf::Hcl::BigDecimal.new(i)}
+        clause('HEXADECIMAL') { |i| Tf::Hcl::Hexadecimal.new(i) }
+        clause('OCTAL') { |i| Tf::Hcl::Octal.new(i) }
+        clause('SCIENTIFIC_NOTATION') { |i| Tf::Hcl::BigDecimal.new(i) }
         clause('STRING') { |i| Tf::Hcl::String.new(i) }
         clause('MULTILINE_STRING') { |i| Tf::Hcl::MultiLineString.new(*i) }
         clause('list') { |i| Tf::Hcl::List.new(i) }
@@ -72,6 +74,7 @@ module Tf
       list(:attributes, 'cattribute', 'COMMA?')
 
       finalize
+      #finalize(precedence: false, use: '/tmp/tf-hcl.parser', lookahead: false, explain: true)
     end
   end
 end
