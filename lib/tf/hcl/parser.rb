@@ -4,10 +4,10 @@ module Tf
 
       list(:sections, 'csection')
 
-      production(:comment) {
+      production(:comment) do
         clause('COMMENT') { |c| Tf::Hcl::Comment.new(c) }
         clause('MULTILINE_COMMENT') { |c| Tf::Hcl::MultiLineComment.new(c) }
-      }
+      end
 
       list(:comments, 'comment')
 
