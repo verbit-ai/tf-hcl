@@ -48,6 +48,7 @@ module Tf
         clause('OCTAL') { |i| Tf::Hcl::Octal.new(i) }
         clause('SCIENTIFIC_NOTATION') { |i| Tf::Hcl::BigDecimal.new(i) }
         clause('STRING') { |i| Tf::Hcl::String.new(i) }
+        clause('IDENT') { |i| Tf::Hcl::String.new(i) }
         clause('MULTILINE_STRING') { |i| Tf::Hcl::MultiLineString.new(*i) }
         clause('list') { |i| Tf::Hcl::List.new(i) }
         clause('object') { |i| Tf::Hcl::Object.new(i) }
